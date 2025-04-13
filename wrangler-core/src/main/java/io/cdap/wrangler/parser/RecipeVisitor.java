@@ -326,4 +326,18 @@ public final class RecipeVisitor extends DirectivesBaseVisitor<RecipeSymbol.Buil
     int column = ctx.getStart().getCharPositionInLine();
     return new SourceInfo(lineno, column, text);
   }
+
+
+  //newly added code
+  @Override
+public RecipeSymbol.Builder visitByteSize(DirectivesParser.ByteSizeContext ctx) {
+  builder.addToken(new io.cdap.wrangler.api.parser.ByteSize(ctx.BYTE_SIZE().getText()));
+  return builder;
+}
+
+@Override
+public RecipeSymbol.Builder visitTimeDuration(DirectivesParser.TimeDurationContext ctx) {
+  builder.addToken(new io.cdap.wrangler.api.parser.TimeDuration(ctx.TIME_DURATION().getText()));
+  return builder;
+}
 }

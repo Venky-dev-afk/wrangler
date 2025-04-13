@@ -140,7 +140,7 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool
+ : String | Number | Column | Bool | BYTESIZE | TIMEDURATION
  ;
 
 ecommand
@@ -256,6 +256,25 @@ Bool
 Number
  : Int ('.' Digit*)?
  ;
+
+/*
+ * New lexer rules for byte size and time duration
+ */
+BYTESIZE : Digit+ ('.' Digit+)? BYTE_UNIT ;
+TIMEDURATION : Digit+ ('.' Digit+)? TIME_UNIT ;
+
+// Byte units: B, KB, MB, GB, TB (case-insensitive)
+fragment BYTE_UNIT : [Bb] | [Kk][Bb] | [Mm][Bb] | [Gg][Bb] | [Tt][Bb] ;
+
+// Time units: ms, s, sec, min, h, hr (case-insensitive)
+fragment TIME_UNIT
+  : [Mm][Ss]
+  | [Ss]
+  | [Ss][Ee][Cc]
+  | [Mm][Ii][Nn]
+  | [Hh]
+  | [Hh][Rr]
+  ;
 
 Identifier
  : [a-zA-Z_\-] [a-zA-Z_0-9\-]*

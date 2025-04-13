@@ -126,7 +126,12 @@ public final class UsageDefinition implements Serializable {
           sb.append("prop:{key:value,[key:value]*");
         } else if (token.type().equals(TokenType.RANGES)) {
           sb.append("start:end=[bool|text|numeric][,start:end=[bool|text|numeric]*");
+        } else if (token.type().equals(TokenType.BYTESIZE)) {
+          sb.append(token.name()).append(" (e.g., 10MB, 1GB)");
+        } else if (token.type().equals(TokenType.TIMEDURATION)) {
+          sb.append(token.name()).append(" (e.g., 30s, 5min)");
         }
+
       }
 
       count--;
