@@ -330,14 +330,16 @@ public final class RecipeVisitor extends DirectivesBaseVisitor<RecipeSymbol.Buil
 
   //newly added code
   @Override
-public RecipeSymbol.Builder visitByteSize(DirectivesParser.ByteSizeContext ctx) {
-  builder.addToken(new io.cdap.wrangler.api.parser.ByteSize(ctx.BYTE_SIZE().getText()));
-  return builder;
+  public RecipeSymbol.Builder visitByteSize(DirectivesParser.ByteSizeContext ctx) {
+    System.out.println("Visiting ByteSize: " + ctx.BYTESIZE().getText()); // for testing
+    builder.addToken(new io.cdap.wrangler.api.parser.ByteSize(ctx.BYTESIZE().getText()));
+    return builder;
+  }
+  
+  @Override
+  public RecipeSymbol.Builder visitTimeDuration(DirectivesParser.TimeDurationContext ctx) {
+    builder.addToken(new io.cdap.wrangler.api.parser.TimeDuration(ctx.TIMEDURATION().getText()));
+    return builder;
+  };
 }
 
-@Override
-public RecipeSymbol.Builder visitTimeDuration(DirectivesParser.TimeDurationContext ctx) {
-  builder.addToken(new io.cdap.wrangler.api.parser.TimeDuration(ctx.TIME_DURATION().getText()));
-  return builder;
-}
-}

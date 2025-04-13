@@ -1,19 +1,3 @@
-/*
- * Copyright © 2017-2019 Cask Data, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
-
 grammar Directives;
 
 options {
@@ -21,26 +5,13 @@ options {
 }
 
 @lexer::header {
-/*
- * Copyright © 2017-2019 Cask Data, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
+  /*
+   * Copyright © 2017-2019 Cask Data, Inc.
+   * Licensed under the Apache License, Version 2.0 (the "License");
+   * http://www.apache.org/licenses/LICENSE-2.0
+   */
 }
 
-/**
- * Parser Grammar for recognizing tokens and constructs of the directives language.
- */
 recipe
  : statements EOF
  ;
@@ -64,6 +35,8 @@ directive
     | stringList
     | numberRanges
     | properties
+    | byteSize
+    | timeDuration
   )*?
   ;
 
@@ -115,6 +88,14 @@ identifier
  : Identifier
  ;
 
+byteSize
+ : BYTESIZE
+ ;
+
+timeDuration
+ : TIMEDURATION
+ ;
+
 properties
  : 'prop' ':' OBrace (propertyList)+  CBrace
  | 'prop' ':' OBrace OBrace (propertyList)+ CBrace { notifyErrorListeners("Too many start paranthesis"); }
@@ -140,7 +121,12 @@ numberRange
  ;
 
 value
- : String | Number | Column | Bool | BYTESIZE | TIMEDURATION
+ : String
+ | Number
+ | Column
+ | Bool
+ | byteSize
+ | timeDuration
  ;
 
 ecommand
@@ -197,7 +183,7 @@ identifierList
 
 
 /*
- * Following are the Lexer Rules used for tokenizing the recipe.
+ * Lexer Rules
  */
 OBrace   : '{';
 CBrace   : '}';
@@ -216,37 +202,36 @@ NotStartsWith : '!^';
 EndsWith : '=$';
 NotEndsWith : '!$';
 PlusEqual : '+=';
-SubEqual : '-=';
-MulEqual : '*=';
-DivEqual : '/=';
-PerEqual : '%=';
-AndEqual : '&=';
-OrEqual  : '|=';
-XOREqual : '^=';
-Pow      : '^';
-External : '!';
-GT       : '>';
-LT       : '<';
-Add      : '+';
-Subtract : '-';
-Multiply : '*';
-Divide   : '/';
-Modulus  : '%';
-OBracket : '[';
-CBracket : ']';
-OParen   : '(';
-CParen   : ')';
-Assign   : '=';
-Comma    : ',';
-QMark    : '?';
-Colon    : ':';
-Dot      : '.';
-At       : '@';
-Pipe     : '|';
+SubEqual : '-=' ;
+MulEqual : '*=' ;
+DivEqual : '/=' ;
+PerEqual : '%=' ;
+AndEqual : '&=' ;
+OrEqual  : '|=' ;
+XOREqual : '^=' ;
+Pow      : '^' ;
+External : '!' ;
+GT       : '>' ;
+LT       : '<' ;
+Add      : '+' ;
+Subtract : '-' ;
+Multiply : '*' ;
+Divide   : '/' ;
+Modulus  : '%' ;
+OBracket : '[' ;
+CBracket : ']' ;
+OParen   : '(' ;
+CParen   : ')' ;
+Assign   : '=' ;
+Comma    : ',' ;
+QMark    : '?' ;
+Colon    : ':' ;
+Dot      : '.' ;
+At       : '@' ;
+Pipe     : '|' ;
 BackSlash: '\\';
 Dollar   : '$';
 Tilde    : '~';
-
 
 Bool
  : 'true'
@@ -263,10 +248,8 @@ Number
 BYTESIZE : Digit+ ('.' Digit+)? BYTE_UNIT ;
 TIMEDURATION : Digit+ ('.' Digit+)? TIME_UNIT ;
 
-// Byte units: B, KB, MB, GB, TB (case-insensitive)
 fragment BYTE_UNIT : [Bb] | [Kk][Bb] | [Mm][Bb] | [Gg][Bb] | [Tt][Bb] ;
 
-// Time units: ms, s, sec, min, h, hr (case-insensitive)
 fragment TIME_UNIT
   : [Mm][Ss]
   | [Ss]
